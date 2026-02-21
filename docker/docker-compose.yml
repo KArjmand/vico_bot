@@ -1,0 +1,21 @@
+services:
+  vicobot:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: vicobot
+    restart: unless-stopped
+    environment:
+      # Required: OpenAI-compatible API key (works with OpenRouter, OpenAI, etc.)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-sk-or-v1-REPLACE_ME}
+      # Optional: OpenAI-compatible API base URL
+      - OPENAI_API_BASE=${OPENAI_API_BASE:-https://openrouter.ai/api/v1}
+      # Required: The LLM model to use
+      - VICOBOT_MODEL=${VICOBOT_MODEL:-google/gemini-2.5-flash}
+      # Optional: Telegram bot token from @BotFather
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      # Optional: Comma-separated Telegram user IDs allowed to chat
+      - TELEGRAM_ALLOW_FROM=${TELEGRAM_ALLOW_FROM:-}
+    volumes:
+      # Persist config, workspace, memory, and skills across restarts
+      - ./vicobot-data:/home/vicobot/.vicobot
