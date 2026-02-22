@@ -4,7 +4,7 @@ import os
 
 pub struct ExecTool {
 	timeout_seconds int
-	workspace      string
+	workspace       string
 }
 
 pub fn new_exec_tool(timeout_seconds int) &ExecTool {

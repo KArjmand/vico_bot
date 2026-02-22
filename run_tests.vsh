@@ -12,9 +12,9 @@ fn main() {
 		println('Failed to find test files!')
 		exit(1)
 	}
-	
+
 	mut test_files := result.output.split('\n').filter(it.len > 0)
-	
+
 	if test_files.len == 0 {
 		println('No test files found!')
 		exit(1)
@@ -33,7 +33,7 @@ fn main() {
 	mut passed := 0
 	mut failed := 0
 	mut failed_files := []string{}
-	
+
 	for file in test_files {
 		println('--- Testing ${file} ---')
 		test_result := execute('v -stats test ${file}')
@@ -50,7 +50,7 @@ fn main() {
 
 	println('========================================')
 	println('Results: ${passed} passed, ${failed} failed')
-	
+
 	if failed_files.len > 0 {
 		println('Failed files:')
 		for f in failed_files {
@@ -58,6 +58,6 @@ fn main() {
 		}
 		exit(1)
 	}
-	
+
 	println('✅ All tests passed!')
 }
