@@ -1,6 +1,5 @@
 module tools
 
-import os
 import net.http
 
 pub struct WebTool {
