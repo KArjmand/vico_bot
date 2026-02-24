@@ -9,7 +9,7 @@ fn test_session_manager_create_session() {
 		os.rmdir_all(temp_dir) or {}
 	}
 
-	mut manager := new_session_manager(temp_dir)
+	mut manager := SessionManager.new(temp_dir)
 	ses := manager.get_or_create('test-channel:test-chat')
 
 	assert ses.key == 'test-channel:test-chat'
@@ -23,7 +23,7 @@ fn test_session_manager_get_existing() {
 		os.rmdir_all(temp_dir) or {}
 	}
 
-	mut manager := new_session_manager(temp_dir)
+	mut manager := SessionManager.new(temp_dir)
 
 	// Create session first
 	mut session1 := manager.get_or_create('test-channel:test-chat')
@@ -41,7 +41,7 @@ fn test_session_add_messages() {
 	os.mkdir_all(temp_dir, os.MkdirParams{}) or { return }
 	defer { os.rmdir_all(temp_dir) or {} }
 
-	mut manager := new_session_manager(temp_dir)
+	mut manager := SessionManager.new(temp_dir)
 	mut session := manager.get_or_create('test')
 
 	// Add messages
@@ -63,7 +63,7 @@ fn test_session_save_and_load() {
 		os.rmdir_all(temp_dir) or {}
 	}
 
-	mut manager := new_session_manager(temp_dir)
+	mut manager := SessionManager.new(temp_dir)
 	mut session := manager.get_or_create('test')
 
 	// Add messages
@@ -89,7 +89,7 @@ fn test_session_persistence() {
 		os.rmdir_all(temp_dir) or {}
 	}
 
-	mut manager := new_session_manager(temp_dir)
+	mut manager := SessionManager.new(temp_dir)
 	mut session := manager.get_or_create('persistent-test')
 
 	// Add multiple messages
@@ -118,7 +118,7 @@ fn test_session_trim() {
 		os.rmdir_all(temp_dir) or {}
 	}
 
-	mut manager := new_session_manager(temp_dir)
+	mut manager := SessionManager.new(temp_dir)
 	mut session := manager.get_or_create('test')
 
 	// Add more messages than max_history_size (50)

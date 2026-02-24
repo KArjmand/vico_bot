@@ -2,12 +2,13 @@ module tools
 
 import net.http
 
+@[noinit]
 pub struct WebTool {
 mut:
 	last_url string
 }
 
-pub fn new_web_tool() &WebTool {
+pub fn WebTool.new() &WebTool {
 	return &WebTool{}
 }
 

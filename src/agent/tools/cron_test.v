@@ -3,8 +3,8 @@ module tools
 import cron
 
 fn test_cron_tool_add_job() {
-	scheduler := cron.new_scheduler(fn (job cron.Job) {})
-	mut tool := new_cron_tool(scheduler)
+	scheduler := cron.Scheduler.new(fn (job cron.Job) {})
+	mut tool := CronTool.new(scheduler)
 
 	args := {
 		'action':    'add'
@@ -20,8 +20,8 @@ fn test_cron_tool_add_job() {
 }
 
 fn test_cron_tool_add_recurring_job() {
-	scheduler := cron.new_scheduler(fn (job cron.Job) {})
-	mut tool := new_cron_tool(scheduler)
+	scheduler := cron.Scheduler.new(fn (job cron.Job) {})
+	mut tool := CronTool.new(scheduler)
 
 	args := {
 		'action':    'add'
@@ -38,8 +38,8 @@ fn test_cron_tool_add_recurring_job() {
 }
 
 fn test_cron_tool_list_empty() {
-	scheduler := cron.new_scheduler(fn (job cron.Job) {})
-	mut tool := new_cron_tool(scheduler)
+	scheduler := cron.Scheduler.new(fn (job cron.Job) {})
+	mut tool := CronTool.new(scheduler)
 
 	args := {
 		'action': 'list'
@@ -49,8 +49,8 @@ fn test_cron_tool_list_empty() {
 }
 
 fn test_cron_tool_list_with_jobs() {
-	scheduler := cron.new_scheduler(fn (job cron.Job) {})
-	mut tool := new_cron_tool(scheduler)
+	scheduler := cron.Scheduler.new(fn (job cron.Job) {})
+	mut tool := CronTool.new(scheduler)
 
 	// Add a job first
 	add_args := {
@@ -71,8 +71,8 @@ fn test_cron_tool_list_with_jobs() {
 }
 
 fn test_cron_tool_cancel_job() {
-	scheduler := cron.new_scheduler(fn (job cron.Job) {})
-	mut tool := new_cron_tool(scheduler)
+	scheduler := cron.Scheduler.new(fn (job cron.Job) {})
+	mut tool := CronTool.new(scheduler)
 
 	// Add a job first
 	add_args := {
@@ -94,8 +94,8 @@ fn test_cron_tool_cancel_job() {
 }
 
 fn test_cron_tool_cancel_nonexistent() {
-	scheduler := cron.new_scheduler(fn (job cron.Job) {})
-	mut tool := new_cron_tool(scheduler)
+	scheduler := cron.Scheduler.new(fn (job cron.Job) {})
+	mut tool := CronTool.new(scheduler)
 
 	args := {
 		'action': 'cancel'
@@ -107,8 +107,8 @@ fn test_cron_tool_cancel_nonexistent() {
 }
 
 fn test_cron_tool_invalid_action() {
-	scheduler := cron.new_scheduler(fn (job cron.Job) {})
-	mut tool := new_cron_tool(scheduler)
+	scheduler := cron.Scheduler.new(fn (job cron.Job) {})
+	mut tool := CronTool.new(scheduler)
 
 	args := {
 		'action': 'invalid'
@@ -118,8 +118,8 @@ fn test_cron_tool_invalid_action() {
 }
 
 fn test_cron_tool_set_context() {
-	scheduler := cron.new_scheduler(fn (job cron.Job) {})
-	mut tool := new_cron_tool(scheduler)
+	scheduler := cron.Scheduler.new(fn (job cron.Job) {})
+	mut tool := CronTool.new(scheduler)
 
 	tool.set_context('test-channel', 'test-chat-id')
 	// Test that context is set (would be used when jobs fire)

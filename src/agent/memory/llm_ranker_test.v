@@ -5,8 +5,8 @@ import providers
 import x.json2
 
 fn test_llm_ranker_basic() {
-	mock_provider := providers.new_mock_provider()
-	ranker := new_llm_ranker(mock_provider, 'test-model')
+	mock_provider := providers.MockProvider.new()
+	ranker := LLMMemoryRanker.new(mock_provider, 'test-model')
 
 	memories := [
 		MemoryItem{
@@ -27,8 +27,8 @@ fn test_llm_ranker_basic() {
 }
 
 fn test_llm_ranker_empty_memories() {
-	mock_provider := providers.new_mock_provider()
-	ranker := new_llm_ranker(mock_provider, 'test-model')
+	mock_provider := providers.MockProvider.new()
+	ranker := LLMMemoryRanker.new(mock_provider, 'test-model')
 
 	empty_memories := []MemoryItem{}
 	result := ranker.rank('any query', empty_memories, 5)
@@ -36,8 +36,8 @@ fn test_llm_ranker_empty_memories() {
 }
 
 fn test_llm_ranker_zero_top() {
-	mock_provider := providers.new_mock_provider()
-	ranker := new_llm_ranker(mock_provider, 'test-model')
+	mock_provider := providers.MockProvider.new()
+	ranker := LLMMemoryRanker.new(mock_provider, 'test-model')
 
 	memories := [
 		MemoryItem{
@@ -52,8 +52,8 @@ fn test_llm_ranker_zero_top() {
 }
 
 fn test_llm_ranker_fallback() {
-	mock_provider := providers.new_mock_provider()
-	ranker := new_llm_ranker(mock_provider, 'test-model')
+	mock_provider := providers.MockProvider.new()
+	ranker := LLMMemoryRanker.new(mock_provider, 'test-model')
 
 	memories := [
 		MemoryItem{
@@ -73,7 +73,7 @@ fn test_llm_ranker_fallback() {
 }
 
 fn test_llm_ranker_uses_provider() {
-	mut mock_provider := providers.new_mock_provider()
+	mut mock_provider := providers.MockProvider.new()
 	mock_provider.tool_calls = [
 		providers.ToolCall{
 			id:        '1'
@@ -83,7 +83,7 @@ fn test_llm_ranker_uses_provider() {
 			}
 		},
 	]
-	ranker := new_llm_ranker(mock_provider, 'test-model')
+	ranker := LLMMemoryRanker.new(mock_provider, 'test-model')
 
 	memories := [
 		MemoryItem{
@@ -104,7 +104,7 @@ fn test_llm_ranker_uses_provider() {
 }
 
 fn test_llm_ranker_parses_float_indices() {
-	mut mock_provider := providers.new_mock_provider()
+	mut mock_provider := providers.MockProvider.new()
 	mock_provider.tool_calls = [
 		providers.ToolCall{
 			id:        '1'
@@ -114,7 +114,7 @@ fn test_llm_ranker_parses_float_indices() {
 			}
 		},
 	]
-	ranker := new_llm_ranker(mock_provider, 'test-model')
+	ranker := LLMMemoryRanker.new(mock_provider, 'test-model')
 
 	memories := [
 		MemoryItem{
@@ -140,9 +140,9 @@ fn test_llm_ranker_parses_float_indices() {
 }
 
 fn test_llm_ranker_parses_array_from_content() {
-	mut mock_provider := providers.new_mock_provider()
+	mut mock_provider := providers.MockProvider.new()
 	mock_provider.response = '[1,0]'
-	ranker := new_llm_ranker(mock_provider, 'test-model')
+	ranker := LLMMemoryRanker.new(mock_provider, 'test-model')
 
 	memories := [
 		MemoryItem{

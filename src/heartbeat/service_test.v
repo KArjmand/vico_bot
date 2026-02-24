@@ -13,7 +13,7 @@ fn test_heartbeat_sends_message() {
 
 	mut background := context.background()
 	mut ctx, cancel := context.with_cancel(mut background)
-	hub := chat.new_hub(10)
+	hub := chat.Hub.new(10)
 
 	start_heartbeat(mut ctx, ws, 100 * time.millisecond, hub)
 

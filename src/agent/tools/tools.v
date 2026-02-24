@@ -12,14 +12,14 @@ mut:
 	execute(args map[string]string) !string
 }
 
-@[heap]
+@[heap; noinit]
 pub struct Registry {
 mut:
 	mu    int
 	tools map[string]&Tool
 }
 
-pub fn new_registry() &Registry {
+pub fn Registry.new() &Registry {
 	return &Registry{
 		// Match the expected map[string]&Tool type
 		tools: map[string]&Tool{}

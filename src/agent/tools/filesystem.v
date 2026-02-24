@@ -2,12 +2,13 @@ module tools
 
 import os
 
+@[noinit]
 pub struct FilesystemTool {
 mut:
 	workspace string
 }
 
-pub fn new_filesystem_tool(workspace string) &FilesystemTool {
+pub fn FilesystemTool.new(workspace string) &FilesystemTool {
 	return &FilesystemTool{
 		workspace: workspace
 	}

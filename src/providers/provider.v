@@ -4,6 +4,7 @@ import context
 import x.json2
 
 // Message represents a chat message to/from the LLM.
+@[noinit]
 pub struct Message {
 pub:
 	role         string // "system" | "user" | "assistant" | "tool"
@@ -13,7 +14,7 @@ pub:
 }
 
 // new_message creates a new Message instance
-pub fn new_message(role string, content string) Message {
+pub fn Message.new(role string, content string) Message {
 	return Message{
 		role:         role
 		content:      content
@@ -24,28 +25,28 @@ pub fn new_message(role string, content string) Message {
 
 // Factory functions - most idiomatic in V
 
-pub fn new_system_message(content string) Message {
+pub fn Message.system(content string) Message {
 	return Message{
 		role:    'system'
 		content: content
 	}
 }
 
-pub fn new_user_message(content string) Message {
+pub fn Message.user(content string) Message {
 	return Message{
 		role:    'user'
 		content: content
 	}
 }
 
-pub fn new_assistant_message(content string) Message {
+pub fn Message.assistant(content string) Message {
 	return Message{
 		role:    'assistant'
 		content: content
 	}
 }
 
-pub fn new_assistant_with_tools(content string, tool_calls []ToolCall) Message {
+pub fn Message.assistant_with_tools(content string, tool_calls []ToolCall) Message {
 	return Message{
 		role:       'assistant'
 		content:    content
@@ -54,7 +55,7 @@ pub fn new_assistant_with_tools(content string, tool_calls []ToolCall) Message {
 }
 
 // new_tool_message creates a new tool response message
-pub fn new_tool_message(content string, tool_call_id string) Message {
+pub fn Message.tool(content string, tool_call_id string) Message {
 	return Message{
 		role:         'tool'
 		content:      content
@@ -64,7 +65,7 @@ pub fn new_tool_message(content string, tool_call_id string) Message {
 }
 
 // new_assistant_message creates a new assistant message with optional tool calls
-pub fn new_assistant_message_with_tool_calls(content string, tool_calls []ToolCall) Message {
+pub fn Message.assistant_with_tool_calls(content string, tool_calls []ToolCall) Message {
 	return Message{
 		role:         'assistant'
 		content:      content

@@ -3,7 +3,7 @@ module memory
 import os
 
 fn test_memory_add_and_recent() {
-	mut s := new_memory_store(3)
+	mut s := MemoryStore.new(3)
 	s.add_long('L1')
 	s.add_short('two')
 	s.add_short('one')
@@ -16,7 +16,7 @@ fn test_memory_add_and_recent() {
 }
 
 fn test_short_limit() {
-	mut s := new_memory_store(2)
+	mut s := MemoryStore.new(2)
 	s.add_short('c')
 	s.add_short('b')
 	s.add_short('a')
@@ -28,7 +28,7 @@ fn test_short_limit() {
 }
 
 fn test_query_by_keyword() {
-	mut s := new_memory_store(10)
+	mut s := MemoryStore.new(10)
 	s.add_long('apple pie recipe')
 	s.add_short('Remember the apple')
 
@@ -46,7 +46,7 @@ fn test_memory_persistence_read_write_long_and_today() {
 		os.rmdir_all(workspace_dir) or {}
 	}
 
-	mut s := new_memory_store_with_workspace(workspace_dir, 10)
+	mut s := MemoryStore.new_with_workspace(workspace_dir, 10)
 
 	s.write_long_term('Long-term fact\n') or { return }
 	lt := s.read_long_term() or { return }

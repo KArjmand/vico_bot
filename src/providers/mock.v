@@ -2,13 +2,14 @@ module providers
 
 import context
 
+@[noinit]
 pub struct MockProvider {
 pub mut:
 	response   string
 	tool_calls []ToolCall
 }
 
-pub fn new_mock_provider() MockProvider {
+pub fn MockProvider.new() MockProvider {
 	return MockProvider{}
 }
 

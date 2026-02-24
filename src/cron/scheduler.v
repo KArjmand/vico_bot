@@ -19,6 +19,7 @@ pub mut:
 
 pub type FireCallback = fn (job Job)
 
+@[heap; noinit]
 pub struct Scheduler {
 	callback FireCallback @[required]
 mut:
@@ -27,7 +28,7 @@ mut:
 	running bool
 }
 
-pub fn new_scheduler(callback FireCallback) Scheduler {
+pub fn Scheduler.new(callback FireCallback) Scheduler {
 	return Scheduler{
 		callback: callback
 		jobs:     map[string]&Job{}

@@ -12,13 +12,14 @@ mut:
 	history []string
 }
 
+@[noinit]
 pub struct SessionManager {
 mut:
 	sessions  map[string]&Session
 	workspace string
 }
 
-pub fn new_session_manager(workspace string) SessionManager {
+pub fn SessionManager.new(workspace string) SessionManager {
 	return SessionManager{
 		sessions:  map[string]&Session{}
 		workspace: workspace

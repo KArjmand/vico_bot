@@ -6,6 +6,7 @@ import context
 import x.json2
 
 // OpenAIProvider calls an OpenAI-compatible API
+@[noinit]
 pub struct OpenAIProvider {
 pub:
 	api_key  string
@@ -13,6 +14,23 @@ pub:
 pub mut:
 	timeout    time.Duration
 	max_tokens int
+}
+
+pub fn OpenAIProvider.new(api_key string, api_base string, max_tokens int) OpenAIProvider {
+	mut base := api_base
+	if base == '' {
+		base = 'https://api.openai.com/v1'
+	}
+	// Fixed: trim_suffix returns the new string, doesn't modify in place
+	if base.ends_with('/') {
+		base = base.all_before_last('/')
+	}
+	return OpenAIProvider{
+		api_key:    api_key
+		api_base:   base
+		timeout:    60 * time.second
+		max_tokens: max_tokens
+	}
 }
 
 // Internal JSON structures - Use json2.Any throughout for consistency

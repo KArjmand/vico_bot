@@ -2,12 +2,13 @@ module tools
 
 import os
 
+@[noinit]
 pub struct SpawnTool {
 mut:
 	running_processes int
 }
 
-pub fn new_spawn_tool() &SpawnTool {
+pub fn SpawnTool.new() &SpawnTool {
 	return &SpawnTool{
 		running_processes: 0
 	}

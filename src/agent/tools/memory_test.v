@@ -9,8 +9,8 @@ fn test_write_memory_tool_today() {
 	defer {
 		os.rmdir_all(tmp) or {}
 	}
-	mem := memory.new_memory_store_with_workspace(tmp, 10)
-	mut wt := new_write_memory_tool(mem)
+	mem := memory.MemoryStore.new_with_workspace(tmp, 10)
+	mut wt := WriteMemoryTool.new(mem)
 
 	wt.execute({
 		'target':  'today'
@@ -27,8 +27,8 @@ fn test_write_memory_tool_long() {
 	defer {
 		os.rmdir_all(tmp) or {}
 	}
-	mem := memory.new_memory_store_with_workspace(tmp, 10)
-	mut wt := new_write_memory_tool(mem)
+	mem := memory.MemoryStore.new_with_workspace(tmp, 10)
+	mut wt := WriteMemoryTool.new(mem)
 
 	wt.execute({
 		'target':  'long'
@@ -45,8 +45,8 @@ fn test_write_memory_tool_overwrite() {
 	defer {
 		os.rmdir_all(tmp) or {}
 	}
-	mem := memory.new_memory_store_with_workspace(tmp, 10)
-	mut wt := new_write_memory_tool(mem)
+	mem := memory.MemoryStore.new_with_workspace(tmp, 10)
+	mut wt := WriteMemoryTool.new(mem)
 
 	wt.execute({
 		'target':  'long'

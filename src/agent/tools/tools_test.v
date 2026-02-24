@@ -22,7 +22,7 @@ fn (t &TestTool) execute(args map[string]string) !string {
 }
 
 fn test_registry_register_and_get() {
-	mut reg := new_registry()
+	mut reg := Registry.new()
 	t := &TestTool{
 		name_val: 'test'
 	}
@@ -36,7 +36,7 @@ fn test_registry_register_and_get() {
 }
 
 fn test_registry_definitions() {
-	mut reg := new_registry()
+	mut reg := Registry.new()
 	reg.register(&TestTool{ name_val: 'tool1' })
 	reg.register(&TestTool{ name_val: 'tool2' })
 
@@ -45,7 +45,7 @@ fn test_registry_definitions() {
 }
 
 fn test_registry_execute() {
-	mut reg := new_registry()
+	mut reg := Registry.new()
 	reg.register(&TestTool{ name_val: 'mytool' })
 
 	res := reg.execute('mytool', {})!
@@ -53,7 +53,7 @@ fn test_registry_execute() {
 }
 
 fn test_registry_execute_not_found() {
-	mut reg := new_registry()
+	mut reg := Registry.new()
 	res := reg.execute('nonexistent', {}) or {
 		assert err.msg().contains('tool not found')
 		return

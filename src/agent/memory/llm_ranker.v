@@ -5,6 +5,7 @@ import x.json2
 import context
 import strings
 
+@[noinit]
 pub struct LLMMemoryRanker {
 mut:
 	provider ?providers.LLMProvider
@@ -12,7 +13,7 @@ mut:
 	fallback &SimpleRanker
 }
 
-pub fn new_llm_ranker(provider ?providers.LLMProvider, model string) &LLMMemoryRanker {
+pub fn LLMMemoryRanker.new(provider ?providers.LLMProvider, model string) &LLMMemoryRanker {
 	mut effective_model := model
 	if effective_model == '' {
 		if p := provider {
@@ -25,7 +26,7 @@ pub fn new_llm_ranker(provider ?providers.LLMProvider, model string) &LLMMemoryR
 	return &LLMMemoryRanker{
 		provider: provider
 		model:    effective_model
-		fallback: new_simple_ranker()
+		fallback: SimpleRanker.new()
 	}
 }
 
@@ -55,14 +56,8 @@ pub fn (r &LLMMemoryRanker) rank(query string, memories []MemoryItem, top_k int)
 	system_prompt := sb.str()
 
 	messages := [
-		providers.Message{
-			role:    'system'
-			content: system_prompt
-		},
-		providers.Message{
-			role:    'user'
-			content: 'Rank the memories by relevance to the query. Return indices only.'
-		},
+		providers.Message.system(system_prompt),
+		providers.Message.user('Rank the memories by relevance to the query. Return indices only.'),
 	]
 
 	// ── Tool definition ───────────────────────────────────────

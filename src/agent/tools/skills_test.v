@@ -7,8 +7,8 @@ fn test_create_skill_tool_basic() {
 	temp_dir := os.temp_dir()
 	os.rmdir_all(temp_dir) or {}
 
-	mut manager := new_skill_manager(temp_dir)
-	mut tool := new_create_skill_tool(manager)
+	mut manager := SkillManager.new(temp_dir)
+	mut tool := CreateSkillTool.new(manager)
 
 	args := {
 		'name':        'test-skill'
@@ -31,8 +31,8 @@ fn test_create_skill_tool_basic() {
 }
 
 fn test_create_skill_tool_missing_name() {
-	mut manager := new_skill_manager('.')
-	mut tool := new_create_skill_tool(manager)
+	mut manager := SkillManager.new('.')
+	mut tool := CreateSkillTool.new(manager)
 
 	args := {
 		'name':        ''
@@ -48,8 +48,8 @@ fn test_list_skills_tool_empty() {
 	temp_dir := os.temp_dir()
 	defer { os.rmdir_all(temp_dir) or {} }
 
-	mut manager := new_skill_manager(temp_dir)
-	mut tool := new_list_skills_tool(manager)
+	mut manager := SkillManager.new(temp_dir)
+	mut tool := ListSkillsTool.new(manager)
 
 	args := map[string]string{}
 	result := tool.execute(args)!
@@ -84,10 +84,10 @@ fn test_read_skill_tool_existing() {
 		os.rmdir_all(temp_dir) or {}
 	}
 
-	mut manager := new_skill_manager(temp_dir)
+	mut manager := SkillManager.new(temp_dir)
 	manager.create_skill('read-test', 'Test skill', '# Read Test\n\nContent here')!
 
-	mut tool := new_read_skill_tool(manager)
+	mut tool := ReadSkillTool.new(manager)
 	args := {
 		'name': 'read-test'
 	}
@@ -97,8 +97,8 @@ fn test_read_skill_tool_existing() {
 }
 
 fn test_read_skill_tool_nonexistent() {
-	mut manager := new_skill_manager('.')
-	mut tool := new_read_skill_tool(manager)
+	mut manager := SkillManager.new('.')
+	mut tool := ReadSkillTool.new(manager)
 
 	args := {
 		'name': 'nonexistent-skill'
@@ -113,10 +113,10 @@ fn test_delete_skill_tool_existing() {
 		os.rmdir_all(temp_dir) or {}
 	}
 
-	mut manager := new_skill_manager(temp_dir)
+	mut manager := SkillManager.new(temp_dir)
 	manager.create_skill('delete-test', 'To be deleted', 'Will be removed')!
 
-	mut tool := new_delete_skill_tool(manager)
+	mut tool := DeleteSkillTool.new(manager)
 	args := {
 		'name': 'delete-test'
 	}
@@ -130,8 +130,8 @@ fn test_delete_skill_tool_existing() {
 }
 
 fn test_delete_skill_tool_nonexistent() {
-	mut manager := new_skill_manager('.')
-	mut tool := new_delete_skill_tool(manager)
+	mut manager := SkillManager.new('.')
+	mut tool := DeleteSkillTool.new(manager)
 
 	args := {
 		'name': 'nonexistent-skill'

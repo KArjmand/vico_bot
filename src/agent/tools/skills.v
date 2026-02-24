@@ -9,12 +9,12 @@ mut:
 	description string
 }
 
-@[heap]
+@[heap; noinit]
 pub struct SkillManager {
 	workspace string
 }
 
-pub fn new_skill_manager(workspace string) &SkillManager {
+pub fn SkillManager.new(workspace string) &SkillManager {
 	return &SkillManager{
 		workspace: workspace
 	}
@@ -121,12 +121,13 @@ pub fn (sm &SkillManager) parse_skill_metadata(skill_file string) !SkillMetadata
 // Tool Implementations
 // ============================================================================
 
+@[noinit]
 pub struct CreateSkillTool {
 mut:
 	manager &SkillManager
 }
 
-pub fn new_create_skill_tool(manager &SkillManager) &CreateSkillTool {
+pub fn CreateSkillTool.new(manager &SkillManager) &CreateSkillTool {
 	return &CreateSkillTool{
 		manager: manager
 	}
@@ -170,12 +171,13 @@ pub fn (mut t CreateSkillTool) execute(args map[string]string) !string {
 	return 'Skill \'${name}\' created successfully'
 }
 
+@[noinit]
 pub struct ListSkillsTool {
 mut:
 	manager &SkillManager
 }
 
-pub fn new_list_skills_tool(manager &SkillManager) &ListSkillsTool {
+pub fn ListSkillsTool.new(manager &SkillManager) &ListSkillsTool {
 	return &ListSkillsTool{
 		manager: manager
 	}
@@ -206,12 +208,13 @@ pub fn (t &ListSkillsTool) execute(args map[string]string) !string {
 	return result
 }
 
+@[noinit]
 pub struct ReadSkillTool {
 mut:
 	manager &SkillManager
 }
 
-pub fn new_read_skill_tool(manager &SkillManager) &ReadSkillTool {
+pub fn ReadSkillTool.new(manager &SkillManager) &ReadSkillTool {
 	return &ReadSkillTool{
 		manager: manager
 	}
@@ -243,12 +246,13 @@ pub fn (t &ReadSkillTool) execute(args map[string]string) !string {
 	return t.manager.get_skill(name)!
 }
 
+@[noinit]
 pub struct DeleteSkillTool {
 mut:
 	manager &SkillManager
 }
 
-pub fn new_delete_skill_tool(manager &SkillManager) &DeleteSkillTool {
+pub fn DeleteSkillTool.new(manager &SkillManager) &DeleteSkillTool {
 	return &DeleteSkillTool{
 		manager: manager
 	}

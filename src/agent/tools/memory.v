@@ -2,13 +2,13 @@ module tools
 
 import memory as memory_module
 
-@[heap]
+@[heap; noinit]
 pub struct WriteMemoryTool {
 mut:
 	memory &memory_module.MemoryStore
 }
 
-pub fn new_write_memory_tool(memory &memory_module.MemoryStore) &WriteMemoryTool {
+pub fn WriteMemoryTool.new(memory &memory_module.MemoryStore) &WriteMemoryTool {
 	return &WriteMemoryTool{
 		memory: memory
 	}

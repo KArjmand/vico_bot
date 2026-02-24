@@ -2,19 +2,20 @@ module tools
 
 import os
 
+@[noinit]
 pub struct ExecTool {
 	timeout_seconds int
 	workspace       string
 }
 
-pub fn new_exec_tool(timeout_seconds int) &ExecTool {
+pub fn ExecTool.new(timeout_seconds int) &ExecTool {
 	return &ExecTool{
 		timeout_seconds: timeout_seconds
 		workspace:       ''
 	}
 }
 
-pub fn new_exec_tool_with_workspace(timeout_seconds int, workspace string) &ExecTool {
+pub fn ExecTool.new_with_workspace(timeout_seconds int, workspace string) &ExecTool {
 	return &ExecTool{
 		timeout_seconds: timeout_seconds
 		workspace:       workspace

@@ -14,6 +14,7 @@ pub interface Ranker {
 	rank(query string, memories []MemoryItem, top_k int) []MemoryItem
 }
 
+@[noinit]
 pub struct MemoryStore {
 mut:
 	workspace  string
@@ -23,11 +24,11 @@ mut:
 	short      []MemoryItem
 }
 
-pub fn new_memory_store(limit int) &MemoryStore {
-	return new_memory_store_with_workspace('.', limit)
+pub fn MemoryStore.new(limit int) &MemoryStore {
+	return MemoryStore.new_with_workspace('.', limit)
 }
 
-pub fn new_memory_store_with_workspace(workspace string, limit int) &MemoryStore {
+pub fn MemoryStore.new_with_workspace(workspace string, limit int) &MemoryStore {
 	mut adjusted_limit := limit
 	if adjusted_limit <= 0 {
 		adjusted_limit = 100

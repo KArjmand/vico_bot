@@ -2,13 +2,13 @@ module tools
 
 import chat
 
-@[heap]
+@[heap; noinit]
 pub struct MessageTool {
 mut:
 	hub &chat.Hub
 }
 
-pub fn new_message_tool(hub &chat.Hub) &MessageTool {
+pub fn MessageTool.new(hub &chat.Hub) &MessageTool {
 	return &MessageTool{
 		hub: hub
 	}

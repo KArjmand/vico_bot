@@ -11,6 +11,7 @@ import time
 import tools
 
 // Make scheduler optional — much cleaner
+@[noinit]
 pub struct AgentLoop {
 mut:
 	hub            &chat.Hub
@@ -24,7 +25,7 @@ mut:
 	running        bool
 }
 
-pub fn new_agent_loop(hub &chat.Hub,
+pub fn AgentLoop.new(hub &chat.Hub,
 	provider &providers.LLMProvider,
 	model string,
 	max_iterations int,
@@ -40,34 +41,34 @@ pub fn new_agent_loop(hub &chat.Hub,
 		mut_workspace = '.'
 	}
 
-	mut reg := tools.new_registry()
+	mut reg := tools.Registry.new()
 
-	reg.register(tools.new_message_tool(hub))
-	reg.register(tools.new_filesystem_tool(mut_workspace))
-	reg.register(tools.new_exec_tool(60))
-	reg.register(tools.new_web_tool())
-	reg.register(tools.new_spawn_tool())
+	reg.register(tools.MessageTool.new(hub))
+	reg.register(tools.FilesystemTool.new(mut_workspace))
+	reg.register(tools.ExecTool.new(60))
+	reg.register(tools.WebTool.new())
+	reg.register(tools.SpawnTool.new())
 
 	// Safely register cron tool only when provided
 	if mut s := scheduler {
-		reg.register(tools.new_cron_tool(s))
+		reg.register(tools.CronTool.new(s))
 	}
 
-	sm := session.new_session_manager(mut_workspace)
-	ranker := memory.new_llm_ranker(provider, mut_model)
+	sm := session.SessionManager.new(mut_workspace)
+	ranker := memory.LLMMemoryRanker.new(provider, mut_model)
 
 	// If Ranker interface expects non-error return, wrap it
-	mut ctx := new_context_builder(mut_workspace, ranker, 5)
+	mut ctx := ContextBuilder.new(mut_workspace, ranker, 5)
 
-	mem := memory.new_memory_store_with_workspace(mut_workspace, 100)
-	reg.register(tools.new_write_memory_tool(mem))
+	mem := memory.MemoryStore.new_with_workspace(mut_workspace, 100)
+	reg.register(tools.WriteMemoryTool.new(mem))
 
 	// skill tools ...
-	skill_mgr := tools.new_skill_manager(mut_workspace)
-	reg.register(tools.new_create_skill_tool(skill_mgr))
-	reg.register(tools.new_list_skills_tool(skill_mgr))
-	reg.register(tools.new_read_skill_tool(skill_mgr))
-	reg.register(tools.new_delete_skill_tool(skill_mgr))
+	skill_mgr := tools.SkillManager.new(mut_workspace)
+	reg.register(tools.CreateSkillTool.new(skill_mgr))
+	reg.register(tools.ListSkillsTool.new(skill_mgr))
+	reg.register(tools.ReadSkillTool.new(skill_mgr))
+	reg.register(tools.DeleteSkillTool.new(skill_mgr))
 
 	return &AgentLoop{
 		hub:            hub
@@ -170,11 +171,8 @@ pub fn (mut a AgentLoop) run(mut parent context.Context) {
 					}
 
 					if resp.has_tool_calls {
-						messages << providers.Message{
-							role:       'assistant'
-							content:    resp.content
-							tool_calls: resp.tool_calls
-						}
+						messages << providers.Message.assistant_with_tools(resp.content,
+							resp.tool_calls)
 
 						for tc in resp.tool_calls {
 							// Convert json2.Any map → map[string]string if that's what execute expects
@@ -186,11 +184,7 @@ pub fn (mut a AgentLoop) run(mut parent context.Context) {
 							res := a.tools.execute(tc.name, args_str) or { '(tool failed) ${err}' }
 
 							last_tool_result = res
-							messages << providers.Message{
-								role:         'tool'
-								content:      res
-								tool_call_id: tc.id
-							}
+							messages << providers.Message.tool(res, tc.id)
 						}
 						continue
 					}
@@ -254,11 +248,7 @@ pub fn (mut a AgentLoop) process_direct(content string, timeout time.Duration) !
 			return resp.content
 		}
 
-		messages << providers.Message{
-			role:       'assistant'
-			content:    resp.content
-			tool_calls: resp.tool_calls
-		}
+		messages << providers.Message.assistant_with_tools(resp.content, resp.tool_calls)
 
 		for tc in resp.tool_calls {
 			mut args_str := map[string]string{}
@@ -268,11 +258,7 @@ pub fn (mut a AgentLoop) process_direct(content string, timeout time.Duration) !
 
 			result := a.tools.execute(tc.name, args_str) or { '(tool error) ${err}' }
 			last_tool_result = result
-			messages << providers.Message{
-				role:         'tool'
-				content:      result
-				tool_call_id: tc.id
-			}
+			messages << providers.Message.tool(result, tc.id)
 		}
 	}
 

@@ -32,7 +32,7 @@ fn test_load_all() {
 		os.write_file(skill_file, content) or { return }
 	}
 
-	loader := new_skills_loader(workspace_dir)
+	loader := SkillsLoader.new(workspace_dir)
 	skills := loader.load_all() or {
 		println('LoadAll failed: ${err}')
 		return
@@ -59,7 +59,7 @@ fn test_load_by_name() {
 	content := '---\nname: test-skill\ndescription: Test skill\n---\n\n# Test\n\nTest content'
 	os.write_file(skill_file, content) or { return }
 
-	loader := new_skills_loader(workspace_dir)
+	loader := SkillsLoader.new(workspace_dir)
 	skill := loader.load_by_name('test-skill') or {
 		println('LoadByName failed: ${err}')
 		return
@@ -73,13 +73,13 @@ fn test_load_by_name() {
 }
 
 fn test_skills_loader_empty() {
-	loader := new_skills_loader('/nonexistent/path')
+	loader := SkillsLoader.new('/nonexistent/path')
 	skills := loader.load_all() or { []Skill{} }
 
 	assert skills.len == 0
 }
 
 fn test_skills_loader_load_by_name_not_found() {
-	loader := new_skills_loader('.')
+	loader := SkillsLoader.new('.')
 	_ := loader.load_by_name('nonexistent') or { return }
 }

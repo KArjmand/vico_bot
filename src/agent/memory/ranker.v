@@ -1,9 +1,10 @@
 module memory
 
 // SimpleRanker provides basic memory ranking without LLM.
+@[noinit]
 pub struct SimpleRanker {}
 
-pub fn new_simple_ranker() &SimpleRanker {
+pub fn SimpleRanker.new() &SimpleRanker {
 	return &SimpleRanker{}
 }
 

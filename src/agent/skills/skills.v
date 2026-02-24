@@ -9,11 +9,12 @@ pub mut:
 	content     string
 }
 
+@[noinit]
 pub struct SkillsLoader {
 	workspace_path string
 }
 
-pub fn new_skills_loader(workspace_path string) &SkillsLoader {
+pub fn SkillsLoader.new(workspace_path string) &SkillsLoader {
 	return &SkillsLoader{
 		workspace_path: workspace_path
 	}

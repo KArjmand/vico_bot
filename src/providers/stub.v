@@ -4,9 +4,10 @@ import context
 
 // StubProvider is a simple provider useful for local testing.
 // It echoes back the last user message.
+@[noinit]
 pub struct StubProvider {}
 
-pub fn new_stub_provider() StubProvider {
+pub fn StubProvider.new() StubProvider {
 	return StubProvider{}
 }
 

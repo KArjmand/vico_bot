@@ -21,14 +21,14 @@ pub:
 	media    []string
 }
 
-@[heap]
+@[heap; noinit]
 pub struct Hub {
 pub:
 	in  chan Inbound
 	out chan Outbound
 }
 
-pub fn new_hub(buffer int) Hub {
+pub fn Hub.new(buffer int) Hub {
 	return Hub{
 		in:  chan Inbound{cap: buffer}
 		out: chan Outbound{cap: buffer}

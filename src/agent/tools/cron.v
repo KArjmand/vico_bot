@@ -3,6 +3,7 @@ module tools
 import time
 import cron
 
+@[noinit]
 pub struct CronTool {
 mut:
 	scheduler cron.Scheduler
@@ -10,7 +11,7 @@ mut:
 	chat_id   string
 }
 
-pub fn new_cron_tool(scheduler cron.Scheduler) &CronTool {
+pub fn CronTool.new(scheduler cron.Scheduler) &CronTool {
 	return &CronTool{
 		scheduler: scheduler
 	}

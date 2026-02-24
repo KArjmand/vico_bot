@@ -142,16 +142,16 @@ fn run_agent(cmd cli.Command) ! {
 		return
 	}
 
-	hub := chat.new_hub(100)
+	hub := chat.Hub.new(100)
 	cfg := config.load_config() or { config.VicobotConfig{} }
 
-	mut provider := providers.LLMProvider(providers.StubProvider{})
+	mut provider := providers.LLMProvider(providers.StubProvider.new())
 	if openai := cfg.providers.openai {
 		api_key := openai.api_key
 		api_base := openai.api_base
 		max_tokens := openai.max_tokens
 		if api_key != '' {
-			provider = providers.new_openai_provider(api_key, api_base, max_tokens)
+			provider = providers.OpenAIProvider.new(api_key, api_base, max_tokens)
 		}
 	}
 
@@ -168,23 +168,23 @@ fn run_agent(cmd cli.Command) ! {
 		max_iter = 100
 	}
 
-	mut ag := agent.new_agent_loop(hub, provider, model, max_iter, cfg.agents.defaults.workspace,
+	mut ag := agent.AgentLoop.new(hub, provider, model, max_iter, cfg.agents.defaults.workspace,
 		none)
 	resp := ag.process_direct(msg, 60 * time.second) or { return error('error: ${err}') }
 	println(resp)
 }
 
 fn run_gateway(cmd cli.Command) ! {
-	hub := chat.new_hub(200)
+	hub := chat.Hub.new(200)
 	cfg := config.load_config() or { return error('Failed to load config') }
-	provider := providers.new_provider_from_config(cfg)
+	provider := providers.LLMProvider.from_config(cfg)
 
 	mut model := cfg.agents.defaults.model
 	if model == '' {
 		model = provider.get_default_model()
 	}
 
-	mut ag := agent.new_agent_loop(&hub, provider, model, 100, cfg.agents.defaults.workspace,
+	mut ag := agent.AgentLoop.new(&hub, provider, model, 100, cfg.agents.defaults.workspace,
 		none)
 
 	mut background := context.background()
@@ -389,17 +389,17 @@ fn run_telegram(cmd cli.Command) ! {
 		return error('Telegram not configured. Run "vicobot onboard" first.')
 	}
 
-	hub := chat.new_hub(100)
+	hub := chat.Hub.new(100)
 
 	// Example of V's concise provider logic
-	mut provider := providers.LLMProvider(providers.StubProvider{})
+	mut provider := providers.LLMProvider(providers.StubProvider.new())
 	if openai := cfg.providers.openai {
 		api_key := openai.api_key
 		api_base := openai.api_base
 		max_tokens := openai.max_tokens
 
 		if api_key != '' {
-			provider = providers.new_openai_provider(api_key, api_base, max_tokens)
+			provider = providers.OpenAIProvider.new(api_key, api_base, max_tokens)
 		}
 	}
 
@@ -408,7 +408,7 @@ fn run_telegram(cmd cli.Command) ! {
 		model = provider.get_default_model()
 	}
 
-	mut ag := agent.new_agent_loop(&hub, provider, model, 100, cfg.agents.defaults.workspace,
+	mut ag := agent.AgentLoop.new(&hub, provider, model, 100, cfg.agents.defaults.workspace,
 		none)
 
 	mut background := context.background()

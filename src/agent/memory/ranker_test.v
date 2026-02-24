@@ -3,7 +3,7 @@ module memory
 import time
 
 fn test_simple_ranker_basic() {
-	ranker := new_simple_ranker()
+	ranker := SimpleRanker.new()
 
 	memories := [
 		MemoryItem{
@@ -32,7 +32,7 @@ fn test_simple_ranker_basic() {
 }
 
 fn test_simple_ranker_empty() {
-	ranker := new_simple_ranker()
+	ranker := SimpleRanker.new()
 
 	empty_memories := []MemoryItem{}
 	result := ranker.rank('query', empty_memories, 5)
@@ -40,7 +40,7 @@ fn test_simple_ranker_empty() {
 }
 
 fn test_simple_ranker_zero_top() {
-	ranker := new_simple_ranker()
+	ranker := SimpleRanker.new()
 
 	memories := [
 		MemoryItem{
@@ -55,7 +55,7 @@ fn test_simple_ranker_zero_top() {
 }
 
 fn test_simple_ranker_top_larger_than_memories() {
-	ranker := new_simple_ranker()
+	ranker := SimpleRanker.new()
 
 	memories := [
 		MemoryItem{
