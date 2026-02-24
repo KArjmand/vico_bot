@@ -9,7 +9,11 @@ import config
 pub fn LLMProvider.from_config(cfg config.VicobotConfig) LLMProvider {
 	if openai_cfg := cfg.providers.openai {
 		if openai_cfg.api_key != '' {
-			return OpenAIProvider.new(openai_cfg.api_key, openai_cfg.api_base, openai_cfg.max_tokens)
+			return OpenAIProvider.new(
+				api_key:    openai_cfg.api_key
+				api_base:   openai_cfg.api_base
+				max_tokens: openai_cfg.max_tokens
+			)
 		}
 	}
 	return StubProvider.new()

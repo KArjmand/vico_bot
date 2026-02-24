@@ -46,7 +46,7 @@ fn test_openai_function_call_parsing() {
 	time.sleep(100 * time.millisecond) // Give server a moment to start
 
 	// Initialize provider as mut
-	mut p := new_openai_provider('test-key', 'http://localhost:12345', 4096)
+	mut p := OpenAIProvider.new('test-key', 'http://localhost:12345', 4096)
 	p.timeout = 5 * time.second
 
 	mut base_ctx := context.background()

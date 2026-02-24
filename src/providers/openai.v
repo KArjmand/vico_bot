@@ -16,20 +16,27 @@ pub mut:
 	max_tokens int
 }
 
-pub fn OpenAIProvider.new(api_key string, api_base string, max_tokens int) OpenAIProvider {
-	mut base := api_base
+@[params]
+pub struct OpenAIProviderConfig {
+pub:
+	api_key    string
+	api_base   string
+	max_tokens int
+}
+
+pub fn OpenAIProvider.new(config OpenAIProviderConfig) OpenAIProvider {
+	mut base := config.api_base
 	if base == '' {
 		base = 'https://api.openai.com/v1'
 	}
-	// Fixed: trim_suffix returns the new string, doesn't modify in place
 	if base.ends_with('/') {
 		base = base.all_before_last('/')
 	}
 	return OpenAIProvider{
-		api_key:    api_key
+		api_key:    config.api_key
 		api_base:   base
 		timeout:    60 * time.second
-		max_tokens: max_tokens
+		max_tokens: config.max_tokens
 	}
 }
 
@@ -84,23 +91,6 @@ pub struct ChoiceJSON {
 
 struct ChatResponse {
 	choices []ChoiceJSON
-}
-
-pub fn new_openai_provider(api_key string, api_base string, max_tokens int) OpenAIProvider {
-	mut base := api_base
-	if base == '' {
-		base = 'https://api.openai.com/v1'
-	}
-	// Fixed: trim_suffix returns the new string, doesn't modify in place
-	if base.ends_with('/') {
-		base = base.all_before_last('/')
-	}
-	return OpenAIProvider{
-		api_key:    api_key
-		api_base:   base
-		timeout:    60 * time.second
-		max_tokens: max_tokens
-	}
 }
 
 pub fn (p OpenAIProvider) get_default_model() string {

@@ -151,7 +151,11 @@ fn run_agent(cmd cli.Command) ! {
 		api_base := openai.api_base
 		max_tokens := openai.max_tokens
 		if api_key != '' {
-			provider = providers.OpenAIProvider.new(api_key, api_base, max_tokens)
+			provider = providers.OpenAIProvider.new(
+				api_key:    api_key
+				api_base:   api_base
+				max_tokens: max_tokens
+			)
 		}
 	}
 
@@ -168,8 +172,13 @@ fn run_agent(cmd cli.Command) ! {
 		max_iter = 100
 	}
 
-	mut ag := agent.AgentLoop.new(hub, provider, model, max_iter, cfg.agents.defaults.workspace,
-		none)
+	mut ag := agent.AgentLoop.new(
+		hub:            &hub
+		provider:       provider
+		model:          model
+		max_iterations: max_iter
+		workspace:      cfg.agents.defaults.workspace
+	)
 	resp := ag.process_direct(msg, 60 * time.second) or { return error('error: ${err}') }
 	println(resp)
 }
@@ -184,8 +193,12 @@ fn run_gateway(cmd cli.Command) ! {
 		model = provider.get_default_model()
 	}
 
-	mut ag := agent.AgentLoop.new(&hub, provider, model, 100, cfg.agents.defaults.workspace,
-		none)
+	mut ag := agent.AgentLoop.new(
+		hub:       &hub
+		provider:  provider
+		model:     model
+		workspace: cfg.agents.defaults.workspace
+	)
 
 	mut background := context.background()
 	mut ctx, cancel_fn := context.with_cancel(mut background)
@@ -399,7 +412,11 @@ fn run_telegram(cmd cli.Command) ! {
 		max_tokens := openai.max_tokens
 
 		if api_key != '' {
-			provider = providers.OpenAIProvider.new(api_key, api_base, max_tokens)
+			provider = providers.OpenAIProvider.new(
+				api_key:    api_key
+				api_base:   api_base
+				max_tokens: max_tokens
+			)
 		}
 	}
 
@@ -408,8 +425,12 @@ fn run_telegram(cmd cli.Command) ! {
 		model = provider.get_default_model()
 	}
 
-	mut ag := agent.AgentLoop.new(&hub, provider, model, 100, cfg.agents.defaults.workspace,
-		none)
+	mut ag := agent.AgentLoop.new(
+		hub:       &hub
+		provider:  provider
+		model:     model
+		workspace: cfg.agents.defaults.workspace
+	)
 
 	mut background := context.background()
 	mut ctx, cancel_fn := context.with_cancel(mut background)

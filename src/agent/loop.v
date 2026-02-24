@@ -25,45 +25,48 @@ mut:
 	running        bool
 }
 
-pub fn AgentLoop.new(hub &chat.Hub,
-	provider &providers.LLMProvider,
-	model string,
-	max_iterations int,
-	workspace string,
-	scheduler ?&cron.Scheduler) &AgentLoop {
-	mut mut_model := model
-	mut mut_workspace := workspace
+@[params]
+pub struct AgentLoopConfig {
+pub:
+	hub            &chat.Hub
+	provider       providers.LLMProvider
+	model          string
+	max_iterations int    = 100
+	workspace      string = '.'
+	scheduler      ?&cron.Scheduler
+}
+
+pub fn AgentLoop.new(config AgentLoopConfig) &AgentLoop {
+	mut mut_model := config.model
+	mut mut_workspace := config.workspace
 
 	if mut_model == '' {
-		mut_model = provider.get_default_model()
-	}
-	if mut_workspace == '' {
-		mut_workspace = '.'
+		mut_model = config.provider.get_default_model()
 	}
 
 	mut reg := tools.Registry.new()
 
-	reg.register(tools.MessageTool.new(hub))
+	reg.register(tools.MessageTool.new(config.hub))
 	reg.register(tools.FilesystemTool.new(mut_workspace))
 	reg.register(tools.ExecTool.new(60))
 	reg.register(tools.WebTool.new())
 	reg.register(tools.SpawnTool.new())
 
-	// Safely register cron tool only when provided
-	if mut s := scheduler {
+	if mut s := config.scheduler {
 		reg.register(tools.CronTool.new(s))
 	}
 
 	sm := session.SessionManager.new(mut_workspace)
-	ranker := memory.LLMMemoryRanker.new(provider, mut_model)
+	ranker := memory.LLMMemoryRanker.new(config.provider, mut_model)
 
-	// If Ranker interface expects non-error return, wrap it
-	mut ctx := ContextBuilder.new(mut_workspace, ranker, 5)
+	mut ctx := ContextBuilder.new(
+		workspace: mut_workspace
+		ranker:    ranker
+	)
 
 	mem := memory.MemoryStore.new_with_workspace(mut_workspace, 100)
 	reg.register(tools.WriteMemoryTool.new(mem))
 
-	// skill tools ...
 	skill_mgr := tools.SkillManager.new(mut_workspace)
 	reg.register(tools.CreateSkillTool.new(skill_mgr))
 	reg.register(tools.ListSkillsTool.new(skill_mgr))
@@ -71,14 +74,14 @@ pub fn AgentLoop.new(hub &chat.Hub,
 	reg.register(tools.DeleteSkillTool.new(skill_mgr))
 
 	return &AgentLoop{
-		hub:            hub
-		provider:       provider
+		hub:            config.hub
+		provider:       config.provider
 		tools:          reg
 		sessions:       &sm
 		context:        ctx
 		memory:         mem
 		model:          mut_model
-		max_iterations: max_iterations
+		max_iterations: config.max_iterations
 		running:        false
 	}
 }

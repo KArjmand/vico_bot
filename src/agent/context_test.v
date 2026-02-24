@@ -3,7 +3,10 @@ module agent
 import memory
 
 fn test_build_messages_includes_memories() ! {
-	cb := ContextBuilder.new('.', memory.SimpleRanker.new(), 5)
+	cb := ContextBuilder.new(
+		workspace: '.'
+		ranker:    memory.SimpleRanker.new()
+	)
 
 	history := ['user: hi']
 

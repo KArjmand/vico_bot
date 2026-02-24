@@ -14,12 +14,19 @@ pub:
 	skills_loader &skills.SkillsLoader
 }
 
-pub fn ContextBuilder.new(workspace string, r ?memory.Ranker, top_k int) &ContextBuilder {
+@[params]
+pub struct ContextBuilderConfig {
+	workspace string = '.'
+	ranker    memory.Ranker
+	top_k     int = 5
+}
+
+pub fn ContextBuilder.new(config ContextBuilderConfig) &ContextBuilder {
 	return &ContextBuilder{
-		workspace:     workspace
-		ranker:        r
-		top_k:         top_k
-		skills_loader: skills.SkillsLoader.new(workspace)
+		workspace:     config.workspace
+		ranker:        config.ranker
+		top_k:         config.top_k
+		skills_loader: skills.SkillsLoader.new(config.workspace)
 	}
 }
 
